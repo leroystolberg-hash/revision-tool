@@ -300,7 +300,7 @@ class _TempFilesCardState extends ConsumerState<_TempFilesCard> {
               description: report == null ? '—' : '${report.entries}',
             ),
             CardListTile(
-              title: _isRussian ? 'Удалено после очистки' : 'Freed after cleanup',
+              title: t.freedAfterCleanupLabel,
               description: report == null
                   ? '—'
                   : '${_formatBytes(report.cleanedBytes)} / ${report.cleanedEntries}',
