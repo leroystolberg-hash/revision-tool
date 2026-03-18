@@ -188,9 +188,7 @@ class _QuickOptimizeCardState extends State<_QuickOptimizeCard> {
                           _previewFuture = _service.previewPreset(_selectedPreset);
                         });
                       },
-                child: Text(_isRunning
-                    ? (_isRussian ? 'Запуск...' : 'Running...')
-                    : (_isRussian ? 'Применить' : 'Apply')),
+                child: Text(_isRunning ? t.runningStatus : t.applyButton),
               ),
             ],
           ),
