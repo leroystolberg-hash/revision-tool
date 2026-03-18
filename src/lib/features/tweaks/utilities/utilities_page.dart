@@ -286,9 +286,9 @@ class _TempFilesCardState extends ConsumerState<_TempFilesCard> {
           ),
           children: [
             CardListTile(
-              title: _isRussian ? 'Найдено временных данных' : 'Detected temporary data',
+              title: t.detectedTemporaryDataLabel,
               description: report == null
-                  ? (_isRussian ? 'Сканирование...' : 'Scanning...')
+                  ? t.scanningLabel
                   : _formatBytes(report.totalBytes),
             ),
             CardListTile(
