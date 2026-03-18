@@ -306,7 +306,7 @@ class _TempFilesCardState extends ConsumerState<_TempFilesCard> {
                   : '${_formatBytes(report.cleanedBytes)} / ${report.cleanedEntries}',
             ),
             CardListTile(
-              title: _isRussian ? 'Проверяемые папки' : 'Scanned folders',
+              title: t.scannedFoldersLabel,
               description: report == null || report.scannedDirectories.isEmpty
                   ? '—'
                   : report.scannedDirectories.join('\n'),
