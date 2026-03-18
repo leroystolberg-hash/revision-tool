@@ -101,8 +101,7 @@ GoRouter appRouter(Ref ref) {
                       state: state,
                       child: const UpdatesPage(),
                     ),
-              ),
-            ],
+              ),            ],
           ),
           GoRoute(
             path: RouteMeta.msStore.path,

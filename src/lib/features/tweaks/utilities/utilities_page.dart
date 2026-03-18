@@ -7,6 +7,7 @@ import '../../../core/widgets/card_highlight.dart';
 import '../../../extensions.dart';
 import '../../../i18n/generated/strings.g.dart';
 import '../../../utils_gui.dart';
+import 'auto_optimize_service.dart';
 import 'utilities_service.dart';
 
 class UtilitiesPage extends ConsumerWidget {
@@ -24,7 +25,8 @@ class UtilitiesPage extends ConsumerWidget {
         if (hibernationStatus || kDebugMode) const _FastStartupCard(),
         const _ModernStandbyCard(),
         const _TMMonitoringCard(),
-        // const _MPOCard(),
+        const _QuickOptimizeCard(),
+        const _TempFilesCard(),
         const _UsageReportingCard(),
       ].withSpacing(5),
     );
@@ -116,6 +118,215 @@ class _TMMonitoringCard extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+
+class _QuickOptimizeCard extends StatefulWidget {
+  const _QuickOptimizeCard();
+
+  @override
+  State<_QuickOptimizeCard> createState() => _QuickOptimizeCardState();
+}
+
+class _QuickOptimizeCardState extends State<_QuickOptimizeCard> {
+  final AutoOptimizeService _service = const AutoOptimizeService();
+  OptimizationPreset _selectedPreset = OptimizationPreset.safe;
+  late Future<OptimizationPreview> _previewFuture;
+  OptimizationRunResult? _lastRun;
+  bool _isRunning = false;
+
+  bool get _isRussian => Localizations.localeOf(context).languageCode == 'ru';
+
+  @override
+  void initState() {
+    super.initState();
+    _previewFuture = _service.previewPreset(_selectedPreset);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<OptimizationPreview>(
+      future: _previewFuture,
+      builder: (context, snapshot) {
+        final OptimizationPreview? preview = snapshot.data;
+
+        return CardHighlight(
+          icon: msicons.FluentIcons.flash_20_regular,
+          label: _isRussian ? 'Быстрая оптимизация' : 'Quick optimization',
+          description: _isRussian
+              ? 'Применяет пакет существующих оптимизаций проекта одним действием. Перед запуском показывает, что именно изменится.'
+              : 'Applies a bundled set of existing optimizations in one action and previews what will change first.',
+          action: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ComboBox<OptimizationPreset>(
+                value: _selectedPreset,
+                items: const [
+                  ComboBoxItem(value: OptimizationPreset.safe, child: Text('Safe')),
+                  ComboBoxItem(value: OptimizationPreset.max, child: Text('Max')),
+                ],
+                onChanged: _isRunning
+                    ? null
+                    : (value) {
+                        if (value == null) return;
+                        setState(() {
+                          _selectedPreset = value;
+                          _previewFuture = _service.previewPreset(value);
+                        });
+                      },
+              ),
+              const SizedBox(width: 8),
+              FilledButton(
+                onPressed: _isRunning
+                    ? null
+                    : () async {
+                        setState(() => _isRunning = true);
+                        final result = await _service.applyPreset(_selectedPreset);
+                        if (!mounted) return;
+                        setState(() {
+                          _lastRun = result;
+                          _isRunning = false;
+                          _previewFuture = _service.previewPreset(_selectedPreset);
+                        });
+                      },
+                child: Text(_isRunning
+                    ? (_isRussian ? 'Запуск...' : 'Running...')
+                    : (_isRussian ? 'Применить' : 'Apply')),
+              ),
+            ],
+          ),
+          children: [
+            CardListTile(
+              title: _isRussian ? 'Профиль' : 'Preset',
+              description: _selectedPreset == OptimizationPreset.safe
+                  ? (_isRussian ? 'Безопасный' : 'Safe')
+                  : (_isRussian ? 'Максимальный' : 'Max'),
+            ),
+            CardListTile(
+              title: _isRussian ? 'Последний запуск' : 'Last run',
+              description: _lastRun == null
+                  ? (_isRussian ? 'Ещё не запускалось' : 'Not run yet')
+                  : '${_lastRun!.successfulSteps}/${_lastRun!.steps.length} ${_isRussian ? 'шагов успешно' : 'steps succeeded'}',
+            ),
+            if (preview == null)
+              CardListTile(
+                title: _isRussian ? 'Предпросмотр' : 'Preview',
+                description: _isRussian ? 'Сканирование...' : 'Scanning...',
+              )
+            else
+              for (final item in preview.items)
+                CardListTile(
+                  title: item.label,
+                  description: '${item.currentState} → ${item.targetState}. ${item.reason}${item.requiresRestart ? (_isRussian ? ' Требуется перезагрузка.' : ' Restart required.') : ''}',
+                ),
+            if (_lastRun != null)
+              for (final step in _lastRun!.steps)
+                CardListTile(
+                  title: step.label,
+                  description: step.success
+                      ? (_isRussian ? 'Успешно' : 'Success')
+                      : '${_isRussian ? 'Ошибка' : 'Failed'}: ${step.error}',
+                ),
+          ],
+          initiallyExpanded: true,
+        );
+      },
+    );
+  }
+}
+
+class _TempFilesCard extends ConsumerStatefulWidget {
+  const _TempFilesCard();
+
+  @override
+  ConsumerState<_TempFilesCard> createState() => _TempFilesCardState();
+}
+
+class _TempFilesCardState extends ConsumerState<_TempFilesCard> {
+  late Future<TempCleanupReport> _reportFuture;
+  bool _isCleaning = false;
+
+  bool get _isRussian => Localizations.localeOf(context).languageCode == 'ru';
+
+  @override
+  void initState() {
+    super.initState();
+    _reportFuture = ref.read(utilitiesServiceProvider).scanTemporaryFiles();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<TempCleanupReport>(
+      future: _reportFuture,
+      builder: (context, snapshot) {
+        final TempCleanupReport? report = snapshot.data;
+
+        return CardHighlight(
+          icon: msicons.FluentIcons.delete_20_regular,
+          label: _isRussian ? 'Очистка временных файлов' : 'Temporary files cleanup',
+          description: _isRussian
+              ? 'Сканирует временные папки и позволяет безопасно удалить накопившийся мусор.'
+              : 'Scans temporary folders and lets you safely delete accumulated junk.',
+          action: Button(
+            onPressed: _isCleaning
+                ? null
+                : () async {
+                    setState(() => _isCleaning = true);
+                    final TempCleanupReport cleaned = await ref
+                        .read(utilitiesServiceProvider)
+                        .cleanupTemporaryFiles();
+                    if (!mounted) return;
+                    setState(() {
+                      _reportFuture = Future<TempCleanupReport>.value(cleaned);
+                      _isCleaning = false;
+                    });
+                  },
+            child: Text(
+              _isCleaning
+                  ? (_isRussian ? 'Очистка...' : 'Cleaning...')
+                  : (_isRussian ? 'Очистить' : 'Clean'),
+            ),
+          ),
+          children: [
+            CardListTile(
+              title: _isRussian ? 'Найдено временных данных' : 'Detected temporary data',
+              description: report == null
+                  ? (_isRussian ? 'Сканирование...' : 'Scanning...')
+                  : _formatBytes(report.totalBytes),
+            ),
+            CardListTile(
+              title: _isRussian ? 'Найдено элементов' : 'Detected entries',
+              description: report == null ? '—' : '${report.entries}',
+            ),
+            CardListTile(
+              title: _isRussian ? 'Удалено после очистки' : 'Freed after cleanup',
+              description: report == null
+                  ? '—'
+                  : '${_formatBytes(report.cleanedBytes)} / ${report.cleanedEntries}',
+            ),
+            CardListTile(
+              title: _isRussian ? 'Проверяемые папки' : 'Scanned folders',
+              description: report == null || report.scannedDirectories.isEmpty
+                  ? '—'
+                  : report.scannedDirectories.join('\n'),
+            ),
+          ],
+          initiallyExpanded: true,
+        );
+      },
+    );
+  }
+
+  String _formatBytes(int bytes) {
+    const units = ['B', 'KB', 'MB', 'GB'];
+    double value = bytes.toDouble();
+    int index = 0;
+    while (value >= 1024 && index < units.length - 1) {
+      value /= 1024;
+      index += 1;
+    }
+    return '${value.toStringAsFixed(index == 0 ? 0 : 1)} ${units[index]}';
   }
 }
 
