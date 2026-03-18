@@ -153,10 +153,8 @@ class _QuickOptimizeCardState extends State<_QuickOptimizeCard> {
 
         return CardHighlight(
           icon: msicons.FluentIcons.flash_20_regular,
-          label: _isRussian ? 'Быстрая оптимизация' : 'Quick optimization',
-          description: _isRussian
-              ? 'Применяет пакет существующих оптимизаций проекта одним действием. Перед запуском показывает, что именно изменится.'
-              : 'Applies a bundled set of existing optimizations in one action and previews what will change first.',
+          label: t.tweaksUtilitiesQuickOptimizeLabel,
+          description: t.tweaksUtilitiesQuickOptimizeDescription,
           action: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
