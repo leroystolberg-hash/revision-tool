@@ -194,10 +194,10 @@ class _QuickOptimizeCardState extends State<_QuickOptimizeCard> {
           ),
           children: [
             CardListTile(
-              title: _isRussian ? 'Профиль' : 'Preset',
+              title: t.presetLabel,
               description: _selectedPreset == OptimizationPreset.safe
-                  ? (_isRussian ? 'Безопасный' : 'Safe')
-                  : (_isRussian ? 'Максимальный' : 'Max'),
+                  ? t.safePresetLabel
+                  : t.maxPresetLabel,
             ),
             CardListTile(
               title: _isRussian ? 'Последний запуск' : 'Last run',
