@@ -72,6 +72,11 @@ enum RouteMeta {
     path: '/tweaks/updates',
     section: RouteSection.search,
     icon: msicons.FluentIcons.arrow_download_24_regular,
+  ),
+  tweaksSystemAudit(
+    path: '/tweaks/system-audit',
+    section: RouteSection.search,
+    icon: msicons.FluentIcons.search_24_regular,
   );
 
   const RouteMeta({
@@ -95,6 +100,7 @@ enum RouteMeta {
       RouteMeta.tweaksPersonalization => t.pageTweaksPersonalization,
       RouteMeta.tweaksUtilities => t.pageTweaksUtilities,
       RouteMeta.tweaksUpdates => t.pageTweaksUpdates,
+      RouteMeta.tweaksSystemAudit => 'System Audit',
     };
   }
 
@@ -217,6 +223,7 @@ const List<RouteMeta> _searchableRoutes = [
   RouteMeta.tweaksPersonalization,
   RouteMeta.tweaksUtilities,
   RouteMeta.tweaksUpdates,
+  RouteMeta.tweaksSystemAudit,
 ];
 
 const List<RouteMeta> _navigationRoutes = [

@@ -56,6 +56,18 @@ class TweaksPage extends ConsumerWidget {
           onPressed: () => context.push(RouteMeta.tweaksUpdates.path),
           action: const ChevronRightAction(),
         ),
+
+        CardHighlight(
+          icon: msicons.FluentIcons.search_20_regular,
+          label: Localizations.localeOf(context).languageCode == 'ru'
+              ? 'Системный аудит'
+              : 'System Audit',
+          description: Localizations.localeOf(context).languageCode == 'ru'
+              ? 'Показывает службы, реестр и драйверы до отключения, чтобы было видно, что именно изменится.'
+              : 'Preview service, registry, and driver changes before disabling anything.',
+          onPressed: () => context.push(RouteMeta.tweaksSystemAudit.path),
+          action: const ChevronRightAction(),
+        ),
       ].withSpacing(5),
     );
   }

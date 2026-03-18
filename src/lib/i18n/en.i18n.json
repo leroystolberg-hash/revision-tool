@@ -61,7 +61,7 @@
     "settingsEPTDescription": "",
     "restartAppDialog": "You must restart your app for the changes to take effect",
     "settingsLanguage": "Language",
-    "settingsLanguageDescription": "Languages are not guraranteed to be fully translated or correct",
+    "settingsLanguageDescription": "Translations may be incomplete or inaccurate",
     "pageMSStore": "Microsoft Store",
     "msstoreSearchingPackages": "Searching for packages",
     "msstoreDownloadingPackages": "Downloading packages ($completed/$total)",
@@ -140,7 +140,7 @@
     "tweaksUtilitiesModernStandbyDescription": "Allow your device to stay in a low-power state while remaining connected and performing background activity",
     "tweaksUtilitiesModernStandbyFullDescription": "Only supported devices can use Modern Standby. Turn it off if sleep or hibernation causes overheating or battery drain",
     "tweaksUtilitiesTMMonitoring": "Network and GPU monitoring",
-    "tweaksUtilitiesTMMonitoringDescription": "Activate the monitoring services for Task Manager",
+    "tweaksUtilitiesTMMonitoringDescription": "Enable the monitoring services required for Task Manager network and GPU counters",
     "tweaksUtilitiesUsageReporting": "Usage Reporting",
     "tweaksUtilitiesUsageReportingDescription": "Reports Battery health and Data usage; Activation may slow down your system",
     "tweaksUtilitiesUpdateKGL": "Update KGL",
@@ -150,5 +150,5 @@
     "tweaksUpdatesWUPage": "Hide the Windows Updates page",
     "tweaksUpdatesWUPageDescription": "Showing this page will also enable update notifications",
     "tweaksUpdatesWUDrivers": "Drivers install through Windows Updates",
-    "tweaksUpdatesWUDriversDescription": "To install drivers in ReviOS, you need to manually check for updates in Settings, as automatic Windows Updates are not supported"
+    "tweaksUpdatesWUDriversDescription": "Allows driver discovery and recovery through Settings > Windows Update, since automatic Windows Updates are not supported in ReviOS"
 }
