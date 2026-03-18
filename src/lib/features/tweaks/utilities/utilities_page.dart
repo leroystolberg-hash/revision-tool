@@ -292,7 +292,7 @@ class _TempFilesCardState extends ConsumerState<_TempFilesCard> {
                   : _formatBytes(report.totalBytes),
             ),
             CardListTile(
-              title: _isRussian ? 'Найдено элементов' : 'Detected entries',
+              title: t.detectedEntriesLabel,
               description: report == null ? '—' : '${report.entries}',
             ),
             CardListTile(
