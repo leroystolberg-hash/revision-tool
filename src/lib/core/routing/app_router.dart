@@ -9,6 +9,7 @@ import '../../features/ms_store/ms_store_product_page.dart';
 import '../../features/tweaks/performance/performance_page.dart';
 import '../../features/tweaks/personalization/personalization_page.dart';
 import '../../features/tweaks/security/security_page.dart';
+import '../../features/tweaks/system_audit/system_audit_page.dart';
 import '../../features/tweaks/tweaks_page.dart';
 import '../../features/tweaks/updates/updates_page.dart';
 import '../../features/tweaks/utilities/utilities_page.dart';
@@ -100,6 +101,16 @@ GoRouter appRouter(Ref ref) {
                       barrierColor: context.theme.scaffoldBackgroundColor,
                       state: state,
                       child: const UpdatesPage(),
+                    ),
+              ),
+              GoRoute(
+                path: 'system-audit',
+                name: 'system-audit',
+                pageBuilder: (context, state) =>
+                    AppRoutes.buildPageWithHorizontalTransition(
+                      barrierColor: context.theme.scaffoldBackgroundColor,
+                      state: state,
+                      child: const SystemAuditPage(),
                     ),
               ),
             ],
