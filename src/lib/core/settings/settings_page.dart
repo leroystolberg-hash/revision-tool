@@ -137,11 +137,9 @@ class _UpdateCardState extends ConsumerState<_UpdateCard> {
             _updateTitle.value = '${t.settingsUpdatingStatus}...';
             try {
               await _toolUpdateService.fetchData();
-              final int currentVersion = _toolUpdateService.getCurrentVersion;
-              final int latestVersion = _toolUpdateService.getLatestVersion;
               final Map<String, dynamic> data = _toolUpdateService.data;
 
-              if (latestVersion > currentVersion) {
+              if (_toolUpdateService.isLatestVersionNewer) {
                 if (!context.mounted) return;
                 _updateTitle.value = t.settingsUpdateButton;
 
